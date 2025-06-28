@@ -1,6 +1,6 @@
 // 1. Load required packages
 require('dotenv').config(); // Load the secret keys
-const express = require('express');
+const express = require('express'); // Create a server
 const mongoose = require('mongoose');
 
 // 2. Set up Express app
