@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createHabit, getHabits, updateHabit } = require('../controllers/habitController');
+const { createHabit, getHabits, updateHabit, deleteHabit } = require('../controllers/habitController');
 
 
 // POST create a habit
@@ -10,6 +10,9 @@ router.post('/', createHabit); // When a POST request is sent to /api/habits/, t
 router.get('/', getHabits);
 
 // Update by ID
-router.put('/:id', updateHabit);
+router.put('/:habitId', updateHabit);
+
+// DELETE /api/habits/:id - Delete a habit by its ID
+router.delete('/:habitId', deleteHabit);
 
 module.exports = router; 

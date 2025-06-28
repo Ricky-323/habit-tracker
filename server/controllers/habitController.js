@@ -1,6 +1,6 @@
 const Habit = require('../models/Habit');
 
-// Handle the request to create a habit
+// POST - Handle the request to create a habit
 const createHabit = async (req, res) => {
     try {
         const { userId, name } = req.body;
@@ -34,9 +34,10 @@ const getHabits = async (req, res) => {
     }
 };
 
+// PUT
 const updateHabit = async (req, res) => {
     try {
-        const habitId = req.params.id;
+        const habitId = req.params.habitId;
         const updates = req.body;
 
         const updatedHabit = await Habit.findByIdAndUpdate(habitId, updates, {
@@ -55,10 +56,29 @@ const updateHabit = async (req, res) => {
     }
 }
 
+// DELETE
+const deleteHabit = async (req, res) => {
+    try {
+        const { habitId } = req.params;
+
+        const deletedHabit = await Habit.findByIdAndDelete(habitId);
+
+        if (!deletedHabit) {
+            return res.status(404).json({ error: 'Habit not found'});
+        }
+
+        res.status(200).json({ message: 'Habit deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting habit:', err);
+        res.status(500).json({ error: 'Server error'});
+    }
+}
+
 module.exports = { 
     getHabits,
     createHabit,
     updateHabit, 
+    deleteHabit
 };
 
 // Explanation:
