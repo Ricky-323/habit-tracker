@@ -17,3 +17,6 @@ Notes:
         Express route + controller + model
     2. Role:
         Handles request, returns data
+
+# React runs on localhost:3000
+# Backend runs on localhost:5000
