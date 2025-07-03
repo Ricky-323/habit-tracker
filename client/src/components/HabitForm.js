@@ -4,7 +4,7 @@ function HabitForm({ onHabitAdded }) {
     const [name, setName] = useState('');
 
     const handleSubmit = (e) => {
-        //e.preventDefault(); // Stop page from reloading
+        e.preventDefault(); // Stop page from reloading
 
         fetch('/api/habits', {
             method: 'POST',

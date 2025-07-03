@@ -3,7 +3,7 @@ import HabitForm from "./components/HabitForm";
 import React, { useState } from "react";
 
 function App() {
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false); // habitList refresh
 
   const triggerRefresh = () => {
     setRefresh(!refresh);
