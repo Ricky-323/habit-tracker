@@ -74,11 +74,56 @@ const deleteHabit = async (req, res) => {
     }
 }
 
+// PATCH /api/habits/:id/complete
+const markHabitAsComplete = async (req, res) => {
+    try {
+        const habitId = req.params.habitId;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+        const habit = await Habit.findById(habitId);
+        if (!habit) return res.status(404).json({ error: 'Habit not found'});
+
+        // Check if there's an entry for today
+        const todayEntry = habit.history.find(entry => new Date(entry.date).getTime() === today.getTime());
+
+        if (todayEntry) {
+            todayEntry.completed = true;
+        } else {
+            habit.history.push({date: today, completed: true});
+        }
+
+        habit.totalCompleted += 1;
+
+        // Simple streak logic
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const yesterdayCompleted = habit.history.find(entry => 
+            new Date(entry.date).getTime() === yesterday.getTime() && entry.completed
+        );
+
+        if (yesterdayCompleted || habit.streak === 0) {
+            habit.streak += 1;
+        } else {
+            habit.streak = 1;
+        }
+
+        await habit.save();
+        res.json(habit);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
 module.exports = { 
     getHabits,
     createHabit,
     updateHabit, 
-    deleteHabit
+    deleteHabit,
+    markHabitAsComplete
 };
 
 // Explanation:

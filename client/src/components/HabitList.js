@@ -26,6 +26,28 @@ function HabitList() {
             .catch(err => console.error("Failed to delete habit: ", err));
     }
 
+    const markAsComplete = (habitId) => {
+        fetch(`/api/habits/${habitId}/complete`, {
+            method: 'PATCH'
+        })
+            .then(res => res.json())
+            .then(() => {
+                fetchHabits();
+            })
+            .catch(err => console.error("Failed to mark habit as complete", err));
+    }
+
+    const isHabitDoneToday = (habit) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return habit.history?.some(entry => {
+            const entryDate = new Date(entry.date);
+            entryDate.setHours(0, 0, 0, 0);
+            return entryDate.getTime() === today.getTime() && entry.completed;
+        })
+    }
+
     return (
         <div>
             <h2>Your Habits</h2>
@@ -37,6 +59,14 @@ function HabitList() {
                             onHabitupdated={fetchHabits}
                             onHabitDeleted={handleDelete}
                         />
+                        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                            <button onClick={() => markAsComplete(habit._id)}>
+                                Mark as Complete
+                            </button>
+                            <span>
+                                {isHabitDoneToday(habit) ? "Done today" : "Not Done Yet"}
+                            </span>
+                        </div>
                     </li>
                 ))}
             </ul>

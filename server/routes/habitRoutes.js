@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createHabit, getHabits, updateHabit, deleteHabit } = require('../controllers/habitController');
+const { createHabit, getHabits, updateHabit, deleteHabit, markHabitAsComplete } = require('../controllers/habitController');
 
 
 // POST create a habit
@@ -14,5 +14,7 @@ router.put('/:habitId', updateHabit);
 
 // DELETE /api/habits/:id - Delete a habit by its ID
 router.delete('/:habitId', deleteHabit);
+
+router.patch('/:habitId/complete', markHabitAsComplete);
 
 module.exports = router; 

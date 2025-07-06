@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const HabitSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  
-  name: { type: String, required: true },           // habit name
+  name: { type: String, required: true }, // habit name
   history: [
     {
       date: { type: Date, required: true },         
@@ -15,3 +15,6 @@ const HabitSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Habit', HabitSchema);
+
+// Habit schema is a Mongoose model
+// which is like a class + MongoDB interface combined
