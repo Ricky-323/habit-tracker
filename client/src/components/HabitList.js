@@ -66,6 +66,9 @@ function HabitList() {
                             <span>
                                 {isHabitDoneToday(habit) ? "Done today" : "Not Done Yet"}
                             </span>
+                            <span style={{ color: habit.streak >= 5 ? 'orange' : 'gray' }}>
+                                # {habit.streak} {habit.streak === 1 ? 'day' : 'days'} streak
+                            </span>
                         </div>
                     </li>
                 ))}
