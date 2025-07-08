@@ -48,6 +48,27 @@ function HabitList() {
         })
     }
 
+    const getLast7DaysStatus = (habit) => {
+        const days = [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 6; i >= 0; i--) {
+            const day = new Date(today);
+            day.setDate(today.getDate() - i);
+
+            const found = habit.history?.some(entry => {
+                const entryDate = new Date(entry.date);
+                entryDate.setHours(0, 0, 0, 0);
+                return entryDate.getTime() === day.getTime() && entry.completed;
+            });
+
+            days.push(found ? '✔' : '✘');
+        }
+
+        return days;
+    }
+
     return (
         <div>
             <h2>Your Habits</h2>
@@ -69,6 +90,9 @@ function HabitList() {
                             <span style={{ color: habit.streak >= 5 ? 'orange' : 'gray' }}>
                                 # {habit.streak} {habit.streak === 1 ? 'day' : 'days'} streak
                             </span>
+                            <div>
+                                Last 7 Days: {getLast7DaysStatus(habit).join(' ')}
+                            </div>
                         </div>
                     </li>
                 ))}
