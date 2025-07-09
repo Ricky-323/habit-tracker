@@ -16,6 +16,9 @@ function HabitList() {
     }, []);
     
     const handleDelete = (habitId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this habit?");
+        if (!confirmDelete) return;
+        
         fetch(`/api/habits/${habitId}`, {
             method: 'Delete'
         })
