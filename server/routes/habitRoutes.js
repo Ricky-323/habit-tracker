@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createHabit, getHabits, updateHabit, deleteHabit, markHabitAsComplete } = require('../controllers/habitController');
+const { createHabit, getHabits, updateHabit, deleteHabit, markHabitAsComplete, toggleHabitCompletionForDate } = require('../controllers/habitController');
 
 
 // POST create a habit
@@ -16,5 +16,7 @@ router.put('/:habitId', updateHabit);
 router.delete('/:habitId', deleteHabit);
 
 router.patch('/:habitId/complete', markHabitAsComplete);
+
+router.patch('/:habitId/toggle', toggleHabitCompletionForDate);
 
 module.exports = router; 

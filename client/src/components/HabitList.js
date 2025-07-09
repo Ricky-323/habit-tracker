@@ -72,6 +72,19 @@ function HabitList() {
         return days;
     }
 
+    const toggleDay = (habitId, dateStr) => {
+        fetch(`/api/habits/${habitId}/toggle`, {
+            method: 'PATCH',
+            headers: { 'Content-Type' : 'application/json' },
+            body: JSON.stringify({date: dateStr})
+        })
+            .then(res => res.json())
+            .then(() => {
+                fetchHabits(); // Refresh
+            })
+            .catch(err => console.error("Failed to toggle habit day:", err));
+    }
+
     return (
         <div>
             <h2>Your Habits</h2>
@@ -94,7 +107,22 @@ function HabitList() {
                                 # {habit.streak} {habit.streak === 1 ? 'day' : 'days'} streak
                             </span>
                             <div>
-                                Last 7 Days: {getLast7DaysStatus(habit).join(' ')}
+                                Last 7 Days:{' '} {getLast7DaysStatus(habit).map((status, index) => {
+                                    const day = new Date();
+                                    day.setHours(0, 0, 0, 0);
+                                    day.setDate(day.getDate() - (6 - index));
+
+                                    const dateStr = day.toISOString(); // we will sent this to backend
+
+                                    return (
+                                       <span
+                                       key={index}
+                                       style={{ marginRight: '6px', cursor: 'pointer'}}
+                                       onClick={() => toggleDay(habit._id, dateStr)}>
+                                            {status}
+                                       </span> 
+                                    );
+                                })}
                             </div>
                         </div>
                     </li>

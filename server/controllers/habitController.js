@@ -118,12 +118,43 @@ const markHabitAsComplete = async (req, res) => {
     }
 }
 
+const toggleHabitCompletionForDate = async (req, res) => {
+    try {
+        const { habitId } = req.params;
+        const { date } = req.body;
+        const targetDate = new Date(date);
+        targetDate.setHours(0, 0, 0, 0);
+
+        const habit = await Habit.findById(habitId);
+        if (!habit) return res.status(404).json({error: 'Habit not found'});
+
+        const entry = habit.history.find(entry => {
+            const entryDate = new Date(entry.date);
+            entryDate.setHours(0, 0, 0, 0);
+            return entryDate.getTime() === targetDate.getTime();
+        });
+
+        if (entry) {
+            entry.completed = !entry.completed;
+        } else {
+            habit.history.push({date: targetDate, completed: true});
+        }
+
+        await habit.save();
+        res.json(habit);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({error: 'Server error'});
+    }
+}
+
 module.exports = { 
     getHabits,
     createHabit,
     updateHabit, 
     deleteHabit,
-    markHabitAsComplete
+    markHabitAsComplete,
+    toggleHabitCompletionForDate
 };
 
 // Explanation:
