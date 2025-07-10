@@ -7,7 +7,14 @@ function HabitList() {
     const fetchHabits = () => {
         fetch('/api/habits?userId=685d490ddb0461a56ab717df')
             .then(res => res.json())
-            .then(data => setHabits(data)) // If state change, then re-render this component (only the changed part. So, it re-run the 'return')
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setHabits(data);
+                } else {
+                    console.error("Unexpected data:", data);
+                    setHabits([]); // fallback to empty
+                }
+            }) // If state change, then re-render this component (only the changed part. So, it re-run the 'return')
             .catch(err => console.error("Failed to fetch habits: ", err));
     }
 

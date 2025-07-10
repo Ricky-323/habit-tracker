@@ -1,5 +1,28 @@
 const Habit = require('../models/Habit');
 
+function calculateStreak(history) {
+    const completedDays = new Set(
+        history
+            .filter(entry => entry.completed)
+            .map(entry => new Date(entry.date).setHours(0, 0, 0, 0))
+    );
+
+    let streak = 0;
+    let currentDay = new Date();
+    currentDay.setHours(0, 0, 0, 0);
+
+    while (true) {
+        if (completedDays.has(currentDay.getTime())) {
+            streak++;
+            currentDay.setDate(currentDay.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+
+    return streak;
+}
+
 // POST - Handle the request to create a habit
 const createHabit = async (req, res) => {
     try {
@@ -27,7 +50,14 @@ const getHabits = async (req, res) => {
         }
 
         const habits = await Habit.find({ userId });
-        res.json(habits);
+
+        const habitsWithStreak = habits.map(habit => {
+            const plain = habit.toObject();
+            plain.streak = calculateStreak(habit.history);
+            return plain;
+        });
+
+        res.json(habitsWithStreak);
     } catch (err) {
         console.error('Error fetching habits:', err);
         res.status(500).json({ error: 'Server error'});
